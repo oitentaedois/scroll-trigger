@@ -3,10 +3,12 @@
 
   /**
    * Triggers functions when the passed element is shown or hidden by scrolling the page.
+   * A visibleClass property can be passed so the class is toggled based on the element's visiblity.
    * Multiple scroll triggers may be added to the same element.
    *
    * ```
    *   scrollTrigger(element, {
+   *     visibleClass: string,
    *     onShow: callback,
    *     onHide: callback,
    *     topOffset: number,
@@ -16,13 +18,14 @@
    */
   function ScrollTrigger(element, options) {
 
-    if (!element || !options || (!options.onShow && !options.onHide)) {
+    if (!element || !options || (!options.onShow && !options.onHide && !options.visibleClass)) {
       return false;
     }
 
     this.isShowing = false;
 
     this.element = element;
+    this.visibleClass = options.visibleClass;
     this.onShow = options.onShow;
     this.onHide = options.onHide;
     this.topOffset = options.topOffset || 0;
@@ -84,8 +87,10 @@
 
     if (!wasVisible && this.visible) {
       this.onShow && this.onShow();
+      this.visibleClass && this.element.classList.remove(this.visibleClass);
     } else if (wasVisible && !this.visible) {
       this.onHide && this.onHide();
+      this.visibleClass && this.element.classList.remove(this.visibleClass);
     }
   };
   // remove listeners.
